@@ -1,0 +1,94 @@
+<%- include('partials/header') %>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-dark">
+                    <h2 class="card-title mb-0">
+                        <i class="bi bi-pencil-square me-2"></i>Edit Book
+                    </h2>
+                </div>
+                <div class="card-body p-4">
+                    <form action="/edit/<%= book.id %>" method="POST" class="needs-validation" novalidate>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="title" class="form-label">
+                                    <i class="bi bi-book me-1"></i>Title *
+                                </label>
+                                <input type="text" class="form-control" id="title" name="title" 
+                                       value="<%= book.title %>" required>
+                                <div class="invalid-feedback">
+                                    Please provide a book title.
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="author" class="form-label">
+                                    <i class="bi bi-person me-1"></i>Author *
+                                </label>
+                                <input type="text" class="form-control" id="author" name="author" 
+                                       value="<%= book.author %>" required>
+                                <div class="invalid-feedback">
+                                    Please provide the author's name.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="isbn" class="form-label">
+                                    <i class="bi bi-upc me-1"></i>ISBN
+                                </label>
+                                <input type="text" class="form-control" id="isbn" name="isbn" 
+                                       value="<%= book.isbn || '' %>">
+                                <div class="form-text">Used to fetch book cover automatically</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="rating" class="form-label">
+                                    <i class="bi bi-star me-1"></i>Rating
+                                </label>
+                                <select class="form-select" id="rating" name="rating">
+                                    <option value="" <%= !book.rating ? 'selected' : '' %>>No rating</option>
+                                    <option value="1" <%= book.rating == 1 ? 'selected' : '' %>>1 ⭐</option>
+                                    <option value="2" <%= book.rating == 2 ? 'selected' : '' %>>2 ⭐⭐</option>
+                                    <option value="3" <%= book.rating == 3 ? 'selected' : '' %>>3 ⭐⭐⭐</option>
+                                    <option value="4" <%= book.rating == 4 ? 'selected' : '' %>>4 ⭐⭐⭐⭐</option>
+                                    <option value="5" <%= book.rating == 5 ? 'selected' : '' %>>5 ⭐⭐⭐⭐⭐</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="date_read" class="form-label">
+                                <i class="bi bi-calendar-event me-1"></i>Date Read
+                            </label>
+                            <input type="date" class="form-control" id="date_read" name="date_read" 
+                                   value="<%= book.date_read ? book.date_read.toISOString().split('T')[0] : '' %>">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="notes" class="form-label">
+                                <i class="bi bi-journal-text me-1"></i>Notes
+                            </label>
+                            <textarea class="form-control" id="notes" name="notes" rows="5"><%= book.notes || '' %></textarea>
+                            <div class="form-text">Share what you learned or what made this book special</div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="/" class="btn btn-outline-secondary me-md-2">
+                                <i class="bi bi-arrow-left me-1"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-warning">
+                                <i class="bi bi-check-circle me-1"></i>Update Book
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

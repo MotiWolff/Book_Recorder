@@ -1,0 +1,181 @@
+<%- include('partials/header') %>
+
+<div class="container">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="jumbotron bg-white rounded-3 shadow-sm p-5 text-center">
+                <h1 class="display-4 text-primary mb-3">
+                    <i class="bi bi-collection me-2"></i>My Reading Journey
+                </h1>
+                <p class="lead text-muted">Track, rate, and remember every book that shaped your thinking</p>
+                <% if (books.length > 0) { %>
+                    <div class="row mt-4">
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <h3 class="text-primary"><%= books.length %></h3>
+                                <p class="text-muted">Books Read</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <h3 class="text-warning">
+                                    <%= books.filter(book => book.rating >= 4).length %>
+                                </h3>
+                                <p class="text-muted">4+ Star Books</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <h3 class="text-success">
+                                    <%= Math.round(books.reduce((sum, book) => sum + (book.rating || 0), 0) / books.length * 10) / 10 %>
+                                </h3>
+                                <p class="text-muted">Avg Rating</p>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sort Controls -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex flex-wrap align-items-center justify-content-between">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-funnel me-2"></i>Sort Books
+                        </h5>
+                        <div class="btn-group" role="group">
+                            <a href="/?sort=date_read&order=DESC" 
+                               class="btn btn-outline-primary <%= currentSort === 'date_read' ? 'active' : '' %>">
+                                <i class="bi bi-calendar-event me-1"></i>Recent
+                            </a>
+                            <a href="/?sort=rating&order=DESC" 
+                               class="btn btn-outline-primary <%= currentSort === 'rating' ? 'active' : '' %>">
+                                <i class="bi bi-star-fill me-1"></i>Rating
+                            </a>
+                            <a href="/?sort=title&order=ASC" 
+                               class="btn btn-outline-primary <%= currentSort === 'title' ? 'active' : '' %>">
+                                <i class="bi bi-sort-alpha-down me-1"></i>Title
+                            </a>
+                            <a href="/?sort=author&order=ASC" 
+                               class="btn btn-outline-primary <%= currentSort === 'author' ? 'active' : '' %>">
+                                <i class="bi bi-person me-1"></i>Author
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Books Grid -->
+    <div class="row">
+        <% if (books.length === 0) { %>
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <i class="bi bi-book display-1 text-muted mb-3"></i>
+                    <h3 class="text-muted">No books in your collection yet</h3>
+                    <p class="text-muted mb-4">Start building your reading history by adding your first book!</p>
+                    <a href="/add" class="btn btn-primary btn-lg">
+                        <i class="bi bi-plus-circle me-2"></i>Add Your First Book
+                    </a>
+                </div>
+            </div>
+        <% } else { %>
+            <% books.forEach(book => { %>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 shadow-sm book-card">
+                        <div class="book-cover-container">
+                            <% if (book.cover_url) { %>
+                                <img src="<%= book.cover_url %>" 
+                                     class="card-img-top book-cover" 
+                                     alt="<%= book.title %> cover" 
+                                     onerror="this.parentElement.innerHTML='<div class=\'no-cover-placeholder\'><i class=\'bi bi-book display-4 text-muted\'></i></div>'">
+                            <% } else { %>
+                                <div class="no-cover-placeholder">
+                                    <i class="bi bi-book display-4 text-muted"></i>
+                                </div>
+                            <% } %>
+                            <% if (book.rating) { %>
+                                <div class="rating-badge">
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="bi bi-star-fill"></i> <%= book.rating %>
+                                    </span>
+                                </div>
+                            <% } %>
+                        </div>
+                        
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-primary mb-2"><%= book.title %></h5>
+                            <h6 class="card-subtitle mb-3 text-muted">
+                                <i class="bi bi-person me-1"></i><%= book.author %>
+                            </h6>
+                            
+                            <% if (book.rating) { %>
+                                <div class="rating mb-2">
+                                    <% for(let i = 1; i <= 5; i++) { %>
+                                        <i class="bi bi-star<%= i <= book.rating ? '-fill text-warning' : ' text-muted' %>"></i>
+                                    <% } %>
+                                </div>
+                            <% } %>
+                            
+                            <% if (book.date_read) { %>
+                                <p class="text-muted small mb-2">
+                                    <i class="bi bi-calendar3 me-1"></i>
+                                    Read: <%= new Date(book.date_read).toLocaleDateString() %>
+                                </p>
+                            <% } %>
+                            
+                            <% if (book.notes) { %>
+                                <p class="card-text text-muted small mb-3" style="font-style: italic;">
+                                    "<%= book.notes.substring(0, 100) %><%= book.notes.length > 100 ? '...' : '' %>"
+                                </p>
+                            <% } %>
+                            
+                            <div class="mt-auto">
+                                <div class="btn-group w-100" role="group">
+                                    <a href="/edit/<%= book.id %>" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-pencil me-1"></i>Edit
+                                    </a>
+                                    <button type="button" class="btn btn-outline-danger btn-sm" 
+                                            data-bs-toggle="modal" data-bs-target="#deleteModal<%= book.id %>">
+                                        <i class="bi bi-trash me-1"></i>Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delete Confirmation Modal -->
+                <div class="modal fade" id="deleteModal<%= book.id %>" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Confirm Delete</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to delete "<%= book.title %>" by <%= book.author %>?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <form action="/delete/<%= book.id %>" method="POST" style="display: inline;">
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="bi bi-trash me-1"></i>Delete Book
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        <% } %>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

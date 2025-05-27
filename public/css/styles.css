@@ -1,0 +1,226 @@
+/* Custom Bootstrap Enhancements */
+:root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --card-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Navbar Enhancements */
+.navbar {
+    background: var(--primary-gradient) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.navbar-brand {
+    font-weight: 700 !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Hero Section */
+.jumbotron {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.stat-card {
+    text-align: center;
+    padding: 1rem;
+}
+
+.stat-card h3 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+/* Book Cards */
+.book-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none !important;
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+}
+
+.book-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--card-shadow-hover);
+}
+
+.book-cover-container {
+    position: relative;
+    height: 250px;
+    background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+    overflow: hidden;
+}
+
+.book-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.book-card:hover .book-cover {
+    transform: scale(1.05);
+}
+
+.no-cover-placeholder {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(45deg, #f1f3f4, #e8eaed);
+}
+
+.rating-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+}
+
+/* Form Enhancements */
+.card-header {
+    background: var(--primary-gradient) !important;
+    border: none;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.btn-outline-primary {
+    border-color: #667eea;
+    color: #667eea;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary.active {
+    background-color: #667eea;
+    border-color: #667eea;
+}
+
+/* Custom animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.book-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.book-card:nth-child(even) {
+    animation-delay: 0.1s;
+}
+
+.book-card:nth-child(3n) {
+    animation-delay: 0.2s;
+}
+
+/* Sort controls */
+.btn-group .btn {
+    transition: all 0.3s ease;
+}
+
+.btn-group .btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Footer */
+footer {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .stat-card h3 {
+        font-size: 2rem;
+    }
+    
+    .book-cover-container {
+        height: 200px;
+    }
+    
+    .jumbotron {
+        padding: 2rem 1rem !important;
+    }
+    
+    .btn-group {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn-group .btn {
+        border-radius: 0.375rem !important;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Loading states */
+.book-cover[data-loading="true"] {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Enhanced modals */
+.modal-content {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #5a6fd8, #6a4190);
+}

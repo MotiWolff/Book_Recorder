@@ -85,7 +85,6 @@ dist
 
 # Gatsby files
 .cache/
-public
 
 # Storybook build outputs
 .out
@@ -112,8 +111,7 @@ ehthumbs.db
 Thumbs.db
 
 # Local development files
-uploads/
-public/uploads/
+
 
 # PM2 ecosystem file
 ecosystem.config.js
@@ -128,4 +126,4 @@ ecosystem.config.js
 *.crt
 
 # Debug files
-debug.log
+debug.logcle

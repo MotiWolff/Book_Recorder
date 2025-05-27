@@ -1,4 +1,4 @@
-// Add this line at the very top!
+// Add this at the very top
 require("dotenv").config();
 
 const express = require("express");
@@ -10,6 +10,69 @@ const path = require("path");
 const app = express();
 const port = process.env.PORT || 3000;
 
+// CRITICAL: Static file middleware must come FIRST and be very explicit
+console.log("Setting up static files from:", path.join(__dirname, "public"));
+
+// Multiple static middleware approaches for maximum compatibility
+app.use(
+  express.static(path.join(__dirname, "public"), {
+    maxAge: "1d",
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith(".css")) {
+        res.setHeader("Content-Type", "text/css");
+      } else if (filePath.endsWith(".js")) {
+        res.setHeader("Content-Type", "application/javascript");
+      }
+    },
+  })
+);
+
+// Explicit route-based static file serving (backup method)
+app.get("/css/styles.css", (req, res) => {
+  res.setHeader("Content-Type", "text/css");
+  res.sendFile(path.join(__dirname, "public", "css", "styles.css"));
+});
+
+app.get("/js/script.js", (req, res) => {
+  res.setHeader("Content-Type", "application/javascript");
+  res.sendFile(path.join(__dirname, "public", "js", "script.js"));
+});
+
+// Debug route to check files on server
+app.get("/debug/files", (req, res) => {
+  const fs = require("fs");
+  try {
+    const publicExists = fs.existsSync(path.join(__dirname, "public"));
+    const cssExists = fs.existsSync(
+      path.join(__dirname, "public", "css", "styles.css")
+    );
+    const jsExists = fs.existsSync(
+      path.join(__dirname, "public", "js", "script.js")
+    );
+
+    let publicContents = [];
+    if (publicExists) {
+      publicContents = fs.readdirSync(path.join(__dirname, "public"));
+    }
+
+    res.json({
+      publicExists,
+      cssExists,
+      jsExists,
+      publicContents,
+      __dirname,
+      NODE_ENV: process.env.NODE_ENV,
+    });
+  } catch (error) {
+    res.json({ error: error.message });
+  }
+});
+
+// Other middleware (AFTER static files)
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
 // Database Configuration
 const db = new pg.Client({
   connectionString: process.env.DATABASE_URL,
@@ -19,25 +82,6 @@ const db = new pg.Client({
 db.connect()
   .then(() => console.log("Connected to PostgreSQL database"))
   .catch((err) => console.error("Database connection error:", err));
-
-// Middleware
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static("public")); // This line is crucial!
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
-
-app.use(
-  express.static("public", {
-    setHeaders: (res, path) => {
-      if (path.endsWith(".css")) {
-        res.setHeader("Content-Type", "text/css");
-      }
-      if (path.endsWith(".js")) {
-        res.setHeader("Content-Type", "application/javascript");
-      }
-    },
-  })
-);
 
 // Helper function to get book cover from Open Library API
 async function getBookCover(isbn) {
@@ -191,6 +235,10 @@ app.post("/delete/:id", async (req, res) => {
 });
 
 // Start server
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Server running on port ${port}`);
+  console.log(
+    "Static files should be served from:",
+    path.join(__dirname, "public")
+  );
 });
